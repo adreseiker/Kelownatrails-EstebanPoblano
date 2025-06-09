@@ -133,17 +133,18 @@ function CalcGroupDiscount(groupSize) {
 * 
 */
 function AddGroupMember(lastName, firstName) {
+   
+    if (!lastName.trim() && !firstName.trim()) {
+        return;               
+    }
 
-	let option = document.createElement("option");
-	option.text = lastName + ", " + firstName;
-	membersLst.add(option);
+    let option = document.createElement("option");
+    option.text = lastName + ", " + firstName;
+    membersLst.add(option);
 
-	lastname.value = "";
-	firstname.value = "";
-
-	lastname.focus();
-
-
+    lastname.value = "";
+    firstname.value = "";
+    lastname.focus();
 }
 
 /*
@@ -151,9 +152,32 @@ function AddGroupMember(lastName, firstName) {
 * 
 */
 function RemoveGroupMember() {
+   
+   if (membersLst.options.length === 0) {
+      throw "The list is already empty";
+   }
+   if (membersLst.selectedIndex === -1) {
+      throw "Please select the member you want to delete first";
+   }
 
-	throw "ERROR! You must work in this function before to send to Staging Environment!";
+   
+   membersLst.remove(membersLst.selectedIndex);
 
+   
+   if (groupSize.value !== "" && !isNaN(groupSize.value)) {
+      const newSize = Math.max(0, parseInt(groupSize.value, 10) - 1);
+      groupSize.value = newSize;
+
+      
+      if (newSize > 0) {
+         CalcGroupDiscount(newSize);
+      } else {
+         discRate.value = "";          
+      }
+   }
+
+   
+   lastname.focus();                  
 }
 
 /*
